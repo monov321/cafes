@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CAFE | Grano de Especialidad Artesanal</title>
+<title>Café Laulhère | Tueste Artesanal</title>
 <link rel="stylesheet" href="styles.css">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Poppins:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -15,7 +15,7 @@
 
 <header class="navbar" id="navbar">
   <div class="logo-container magnetic" data-strength="20">
-    <div class="logo">Cafe</div>
+    <img src="image_aa7f07.png" alt="Café Laulhère Logo" class="logo-img">
   </div>
   <nav>
     <ul class="nav-links">
@@ -33,9 +33,9 @@
 
 <section id="hero" class="hero-section">
   <div class="hero-content">
-    <div class="hero-subtitle fade-in">Tueste Artesanal en Valdivia</div>
-    <h1 class="fade-in delay-1">Despierta<br>tu Alma</h1>
-    <p class="fade-in delay-2">Selección exclusiva de granos del mundo, tostados a mano<br>con precisión matemática y pasión infinita.</p>
+    <div class="hero-subtitle fade-in" data-text="hero_subtitle">Tueste Artesanal en Valdivia</div>
+    <h1 class="fade-in delay-1" data-text="hero_title">Despierta<br>tu Alma</h1>
+    <p class="fade-in delay-2" data-text="hero_desc">Selección exclusiva de granos del mundo, tostados a mano<br>con precisión matemática y pasión infinita.</p>
     <div class="hero-actions fade-in delay-3">
       <button class="cta-button primary-btn magnetic float-anim" data-strength="50" onclick="document.getElementById('productos').scrollIntoView()">Explorar Catálogo</button>
       <button class="cta-button secondary-btn magnetic" data-strength="40" onclick="document.getElementById('nosotros').scrollIntoView()">Conócenos</button>
@@ -49,12 +49,12 @@
   <div class="shipping-notice fade-in">
     <div class="shipping-notice-content">
       <span class="icon">🚲</span>
-      <span class="text">Despacho GRATIS en toda la Isla Teja, Valdivia.</span>
+      <span class="text" data-text="shipping_notice">Despacho GRATIS en toda la Isla Teja, Valdivia.</span>
     </div>
   </div>
 
-  <div class="product-grid staggered-animate" id="product-grid">
-    </div>
+  <div class="product-grid" id="product-grid">
+  </div>
 </section>
 
 <section id="experiencia" class="experience-section">
@@ -64,11 +64,11 @@
   <div class="experience-content fade-in-up">
     <div class="content-wrapper">
       <div class="exp-left">
-        <h2>El Proceso es<br>Nuestra<br>Religión</h2>
+        <h2 data-text="exp_title">El Proceso es<br>Nuestra<br>Religión</h2>
       </div>
       <div class="exp-right">
-        <p>Desde la finca hasta tu taza, controlamos cada variable. No tuesta una máquina automatizada; tuesta un maestro artesano que escucha el crack, observa el color y huele el aroma exacto en el momento perfecto.</p>
-        <p>Cada lote es único. Es ciencia, es arte, es obsesión.</p>
+        <p data-text="exp_desc1">Desde la finca hasta tu taza, controlamos cada variable. No tuesta una máquina automatizada; tuesta un maestro artesano que escucha el crack, observa el color y huele el aroma exacto en el momento perfecto.</p>
+        <p data-text="exp_desc2">Cada lote es único. Es ciencia, es arte, es obsesión.</p>
         <div class="roast-icons">
           <div class="icon-item">🌱<span>Origen Único</span></div>
           <div class="icon-item">🔥<span>Tueste Lento</span></div>
@@ -84,8 +84,10 @@
   <div class="about-content fade-in-up">
     <div class="about-card">
       <div class="card-line"></div>
-      <p>En Cafe no vendemos cafeína. Vendemos rituales. Vendemos ese momento sagrado de la mañana donde el aroma te transporta.</p>
-      <p>Somos un pequeño equipo en Valdivia dedicados por completo a honrar el trabajo de los caficultores, llevando el grano a su máximo potencial de sabor a través de un tueste artesanal meticuloso. <strong>Si buscas lo ordinario, estás en el lugar equivocado.</strong></p>
+      <div class="about-text">
+        <p data-text="about_p1">En Café Laulhère no vendemos cafeína. Vendemos rituales. Vendemos ese momento sagrado de la mañana donde el aroma te transporta.</p>
+        <p data-text="about_p2">Somos un pequeño equipo en Valdivia dedicados por completo a honrar el trabajo de los caficultores, llevando el grano a su máximo potencial de sabor a través de un tueste artesanal meticuloso. <strong>Si buscas lo ordinario, estás en el lugar equivocado.</strong></p>
+      </div>
     </div>
   </div>
 </section>
@@ -93,14 +95,14 @@
 <footer class="site-footer">
   <div class="footer-content">
     <div class="footer-section main-info">
-      <h3>Cafe</h3>
+      <h3>Café Laulhère</h3>
       <p>Elevando el estándar del café de especialidad en el sur de Chile.</p>
     </div>
     <div class="footer-section contact-info">
       <h3>Encuéntranos</h3>
       <p>📍 Av. Los Robles 452, Isla Teja, Valdivia</p>
-      <p>📞 +56 9 8765 4321</p>
-      <p>✉️ ritual@cafe.cl</p>
+      <p>📞 +56 9 9818 4237</p>
+      <p>✉️ contacto@cafe-laulhere.cl</p>
     </div>
     <div class="footer-section hours-info">
       <h3>Horario Sagrado</h3>
@@ -109,8 +111,7 @@
     </div>
   </div>
   <div class="footer-bottom">
-    <p>&copy; 2026 Cafe. Todos los rituales reservados.</p>
-    <a href="#" class="developer-credit magnetic" data-strength="20">By novaworks</a>
+    <p>&copy; 2026 Café Laulhère.</p>
   </div>
 </footer>
 
@@ -133,7 +134,7 @@
   <div class="modal-content product-detail-modal">
     <span class="close-btn" id="close-product-modal">&times;</span>
     <div class="product-detail-layout" id="product-detail-content">
-      </div>
+    </div>
   </div>
 </div>
 
@@ -144,20 +145,9 @@
 </div>
 
 <script>
-const products = [
-  { id: 1, name: "Grano Arábica Colombiano Premium", price: 12000, img: "https://images.unsplash.com/photo-1559525839-b184a4d698c7?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60", desc: "Equilibrio perfecto. Notas dulces a caramelo, panela y un final cítrico vibrante. Cultivado sobre los 1800msnm.", origin: "Huila, Colombia", roast: "Medio" },
-  { id: 2, name: "Espresso Italiano Intenso", price: 14500, img: "https://images.unsplash.com/photo-1587734195503-904fca47e0e9?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60", desc: "Cuerpo robusto, crema densa y persistente. Notas intensas a cacao oscuro, frutos secos y tueste.", origin: "Blend (Brasil/Vietnam)", roast: "Oscuro" },
-  { id: 3, name: "Moka Etíope Afrutado", price: 16000, img: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60", desc: "Explosión de sabor salvaje. Acidez brillante, notas marcadas a frutos rojos, arándanos y jazmín.", origin: "Yirgacheffe, Etiopía", roast: "Claro" },
-  { id: 4, name: "Blend de la Casa (Valdivia Mix)", price: 10500, img: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60", desc: "Suave, reconfortante y achocolatado. Diseñado para disfrutar todo el día. Muy baja acidez.", origin: "Blend Latinoamericano", roast: "Medio" },
-  { id: 5, name: "Descafeinado Suizo Natural", price: 13000, img: "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60", desc: "Todo el sabor, cero culpa. Proceso Swiss Water libre de químicos. Notas a vainilla y malta.", origin: "Perú Orgánico", roast: "Medio" },
-  { id: 6, name: "Robusta Vietnamita Alta Energía", price: 9500, img: "https://images.unsplash.com/photo-1507133750070-44122d2b5168?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60", desc: "Para los que necesitan un despertar potente. Cuerpo extremo, notas a madera, especias y alta cafeína.", origin: "Dak Lak, Vietnam", roast: "Oscuro" },
-  { id: 7, name: "Tueste Francés Ahumado", price: 11000, img: "https://images.unsplash.com/photo-1498804103079-a6351b050096?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60", desc: "Sabor audaz y profundo. Notas intensas a humo, chocolate amargo y un final persistente. Ideal para prensa francesa.", origin: "Honduras HG", roast: "Muy Oscuro" },
-  { id: 8, name: "Orgánico Certificado Perú", price: 15000, img: "https://images.unsplash.com/photo-1524414139215-35c99f80112c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60", desc: "Cultivo sostenible bajo sombra. Perfil limpio, acidez media, notas a miel, manzana verde y nuez.", origin: "Cajamarca, Perú", roast: "Medio-Claro" },
-  { id: 9, name: "Geisha Panameño Exclusivo", price: 25000, img: "https://images.unsplash.com/photo-1558562805-4bf1e2a724eb?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60", desc: "La joya de la corona. Té de bergamota, jazmín, durazno blanco y una complejidad elegante inigualable.", origin: "Boquete, Panamá", roast: "Muy Claro" },
-  { id: 10, name: "Infusión Vainilla Avellana", price: 12500, img: "https://images.unsplash.com/photo-1511920170033-f8396924c348?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60", desc: "Base de Arábica premium infundida naturalmente en frío con extractos orgánicos de vainilla y avellana tostada.", origin: "Base Colombia", roast: "Medio" }
-];
-
+let products = [];
 let cart = [];
+
 const productGrid = document.getElementById('product-grid');
 const cartBtn = document.getElementById('cart-btn');
 const cartModal = document.getElementById('cart-modal');
@@ -173,22 +163,42 @@ const navbar = document.getElementById('navbar');
 const progressBar = document.getElementById('progress-bar');
 const parallaxBg1 = document.getElementById('parallax-bg-1');
 
-// --- INICIALIZACIÓN ---
-window.addEventListener('DOMContentLoaded', () => {
-  renderProducts();
-  setupAdvancedAnimations();
-  setupMagneticButtons();
-});
+async function loadInitialData() {
+    try {
+        const textRes = await fetch('/api/texts');
+        if(textRes.ok) {
+            const texts = await textRes.json();
+            document.querySelectorAll('[data-text]').forEach(el => {
+                const key = el.getAttribute('data-text');
+                if (texts[key]) el.innerHTML = texts[key];
+            });
+        }
 
-// --- RENDERIZADO Y MICRO-INTERACCIONES ---
+        const prodRes = await fetch('/api/products');
+        if(prodRes.ok) {
+            products = await prodRes.json();
+            renderProducts();
+            setupAdvancedAnimations();
+            setupMagneticButtons();
+        }
+    } catch (e) {
+        console.error(e);
+    }
+}
+
 function renderProducts() {
-  products.forEach((product, index) => {
-const card = document.createElement('div');
-    card.style.animationDelay = `${index * 100}ms`; // Delay incremental
+  productGrid.innerHTML = '';
+  products.forEach((product) => {
+    const card = document.createElement('div');
+    card.classList.add('product-card');
     
+    const isOutOfStock = product.stock <= 0;
+    const stockClass = product.stock <= 3 ? 'low' : '';
+    const stockText = isOutOfStock ? 'Agotado' : `Stock: ${product.stock} unidades`;
+
     card.innerHTML = `
-      <div class="product-card-inner perspective-container">
-        <div class="product-img-container magnetic" data-strength="15" onclick="openProductDetail(${product.id})">
+      <div class="product-card-inner">
+        <div class="product-img-container" onclick="openProductDetail(${product.id})">
           <img src="${product.img}" alt="${product.name}" class="product-img">
           <div class="img-overlay"><span>Ver Detalles Ritual</span></div>
         </div>
@@ -196,9 +206,10 @@ const card = document.createElement('div');
           <h3 class="product-title" onclick="openProductDetail(${product.id})">${product.name}</h3>
           <p class="product-origin">🌍 Origen: ${product.origin}</p>
           <p class="product-price">$${product.price.toLocaleString('es-CL')}</p>
+          <p class="product-stock ${stockClass}">${stockText}</p>
           <div class="action-buttons">
-            <button class="add-to-cart-btn secondary-btn" onclick="addToCart(${product.id}, event)">🛒 Añadir</button>
-            <button class="buy-now-btn primary-btn magnetic glow-btn" data-strength="30" onclick="buySingleItem(${product.id}, event)">⚡ Comprar</button>
+            <button class="add-to-cart-btn secondary-btn" onclick="addToCart(${product.id}, event)" ${isOutOfStock ? 'disabled' : ''}>🛒 Añadir</button>
+            <button class="buy-now-btn primary-btn magnetic glow-btn" data-strength="30" onclick="buySingleItem(${product.id}, event)" ${isOutOfStock ? 'disabled' : ''}>⚡ Comprar</button>
           </div>
         </div>
       </div>
@@ -207,9 +218,7 @@ const card = document.createElement('div');
   });
 }
 
-// --- ANIMACIONES AVANZADAS (Scroll & Hover 3D) ---
 function setupAdvancedAnimations() {
-  // 1. Scroll Smooth y compensación
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
       e.preventDefault();
@@ -217,68 +226,35 @@ function setupAdvancedAnimations() {
     });
   });
 
-  // 2. Dynamic Navbar & Progress Bar & Parallax
   window.addEventListener('scroll', () => {
     const sTop = window.scrollY;
     const docH = document.documentElement.scrollHeight - window.innerHeight;
     const sPercent = (sTop / docH) * 100;
     
-    // Progress Bar
     progressBar.style.width = sPercent + "%";
     
-    // Navbar Solidify
     if (sTop > 100) { navbar.classList.add('solid'); } else { navbar.classList.remove('solid'); }
     
-    // Section Parallax (NUEVA FOTO ABAJO)
     const expSection = document.getElementById('experiencia');
     const expRect = expSection.getBoundingClientRect();
     if (expRect.top < window.innerHeight && expRect.bottom > 0) {
-      // Calcular offset Parallax relativo a la sección
       const offset = (window.innerHeight - expRect.top) * 0.4;
       parallaxBg1.style.transform = `translateY(${offset}px) translateZ(0)`;
     }
   });
 
-  // 3. Staggered On-Scroll Animation (Intersection Observer)
   const animObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add('visible');
-        if(entry.target.classList.contains('staggered-animate')){
-          // Animar hijos con delay secuencial
-          entry.target.querySelectorAll('.product-card').forEach(card => card.classList.add('visible'));
-        }
         animObserver.unobserve(entry.target);
       }
     });
   }, { threshold: 0.15, rootMargin: "0px 0px -100px 0px" });
 
-  document.querySelectorAll('.fade-in, .fade-in-up, .staggered-animate').forEach(el => animObserver.observe(el));
-
-  // 4. Hover 3D Perspective en Tarjetas de Producto
-  setTimeout(() => { // Esperar renderizado
-    document.querySelectorAll('.perspective-container').forEach(container => {
-      container.addEventListener('mousemove', (e) => {
-        const card = container.closest('.product-card');
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const midX = rect.width / 2;
-        const midY = rect.height / 2;
-        const rotX = -(y - midY) / 10; // Fuerza de rotación X
-        const rotY = (x - midX) / 10; // Fuerza de rotación Y
-        
-        container.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) scale3d(1.02, 1.02, 1.02) translateZ(10px)`;
-      });
-      
-      container.addEventListener('mouseleave', () => {
-        container.style.transform = `rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1) translateZ(0px)`;
-      });
-    });
-  }, 500);
+  document.querySelectorAll('.fade-in, .fade-in-up').forEach(el => animObserver.observe(el));
 }
 
-// --- BOTONES MAGNÉTICOS ---
 function setupMagneticButtons() {
   document.querySelectorAll('.magnetic').forEach(el => {
     el.addEventListener('mousemove', function(e) {
@@ -289,51 +265,60 @@ function setupMagneticButtons() {
       
       this.style.transform = `translate(${x / s}px, ${y / s}px) translateZ(0)`;
       if(this.classList.contains('cart-icon') || this.classList.contains('add-to-cart-btn')){
-          this.style.transition = 'transform 0.1s linear'; // Suave al mover
+          this.style.transition = 'transform 0.1s linear'; 
       }
     });
     
     el.addEventListener('mouseleave', function(e) {
-      this.style.transition = 'transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)'; // Rebote suave al volver
+      this.style.transition = 'transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)'; 
       this.style.transform = `translate(0px, 0px) translateZ(0)`;
     });
   });
 }
 
-// --- DETALLES DE PRODUCTO MODAL AVANZADO ---
 function openProductDetail(productId) {
   const product = products.find(p => p.id === productId);
+  const isOutOfStock = product.stock <= 0;
+  const stockClass = product.stock <= 3 ? 'low' : '';
+  const stockText = isOutOfStock ? 'Agotado' : `${product.stock} disponibles`;
+
   productDetailContent.innerHTML = `
-    <div class="detail-img-box magnetic" data-strength="10">
-      <img src="${product.img}" alt="${product.name}" class="magnetic" data-strength="5">
+    <div class="detail-img-box">
+      <img src="${product.img}" alt="${product.name}">
     </div>
     <div class="detail-info-box">
       <h2 class="fade-in-up">${product.name}</h2>
       <p class="detail-origin badge-origin fade-in-up delay-1">🌍 Región: ${product.origin}</p>
       <p class="detail-price fade-in-up delay-1">$${product.price.toLocaleString('es-CL')}</p>
+      <p class="detail-stock ${stockClass} fade-in-up delay-1">Stock: ${stockText}</p>
       <p class="detail-desc fade-in-up delay-2">${product.desc}</p>
       <div class="detail-badges fade-in-up delay-2">
         <span class="badge-roast">🔥 Tueste: ${product.roast}</span>
         <span class="badge-fresh">🌿 Tostado a Mano</span>
       </div>
       <div class="detail-actions fade-in-up delay-3 action-buttons">
-        <button class="add-to-cart-btn secondary-btn detail-btn" onclick="addToCart(${product.id}, event)">🛒 Añadir</button>
-        <button class="buy-now-btn primary-btn detail-btn magnetic glow-btn" data-strength="20" onclick="buySingleItem(${product.id}, event)">⚡ Comprar Ya</button>
+        <button class="add-to-cart-btn secondary-btn detail-btn" onclick="addToCart(${product.id}, event)" ${isOutOfStock ? 'disabled' : ''}>🛒 Añadir</button>
+        <button class="buy-now-btn primary-btn detail-btn magnetic glow-btn" data-strength="20" onclick="buySingleItem(${product.id}, event)" ${isOutOfStock ? 'disabled' : ''}>⚡ Comprar Ya</button>
       </div>
     </div>
   `;
   productModal.style.display = 'flex';
-  document.body.style.overflow = 'hidden'; // Bloquear scroll de fondo
-  setupMagneticButtons(); // Reiniciar magnéticos dentro del modal
-  // Forzar trigger de animaciones internas
+  document.body.style.overflow = 'hidden'; 
+  setupMagneticButtons(); 
   setTimeout(() => productDetailContent.querySelectorAll('.fade-in-up').forEach(el => el.classList.add('visible')), 50);
 }
 
-// --- LÓGICA DE CARRITO Y WEBPAY ---
 function addToCart(productId, event) {
   if (event) event.stopPropagation();
   const product = products.find(p => p.id === productId);
   const existingItem = cart.find(item => item.id === productId);
+  
+  const currentQty = existingItem ? existingItem.quantity : 0;
+  if (currentQty >= product.stock) {
+      alert(`Solo quedan ${product.stock} unidades de este café.`);
+      return;
+  }
+
   if (existingItem) {
     existingItem.quantity += 1;
   } else {
@@ -341,7 +326,6 @@ function addToCart(productId, event) {
   }
   updateCartUI();
   
-  // Feedback visual botón
   const button = event ? event.currentTarget : null;
   if (button) {
     const originalText = button.innerHTML;
@@ -360,7 +344,6 @@ async function buySingleItem(productId, event) {
   const button = event.currentTarget;
   const originalText = button.innerHTML;
   
-  // Bloquear botón y feedback
   button.innerHTML = '<span class="loader-spiral"></span>';
   button.disabled = true;
 
@@ -372,7 +355,12 @@ async function buySingleItem(productId, event) {
     const response = await fetch('/api/webpay/create', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ amount: totalAmount, sessionId, buyOrder })
+      body: JSON.stringify({ 
+          amount: totalAmount, 
+          sessionId, 
+          buyOrder,
+          items: [{ id: product.id, name: product.name, quantity: 1 }]
+      })
     });
     
     const data = await response.json();
@@ -383,7 +371,7 @@ async function buySingleItem(productId, event) {
       document.getElementById('token_ws').value = data.token;
       form.submit();
     } else {
-      alert('Error en Webpay Test. Revisa server.js');
+      alert(data.error || 'Error en Webpay.');
       button.innerHTML = originalText;
       button.disabled = false;
     }
@@ -416,13 +404,13 @@ function updateCartUI() {
   
   cartTotalElement.textContent = '$' + total.toLocaleString('es-CL');
   cartCountElement.textContent = count;
+  checkoutBtn.disabled = count === 0;
   
-  // Feedback visual badge
   if (count > 0) {
     cartCountElement.style.transform = 'scale(1.4) rotate(10deg)';
     setTimeout(() => cartCountElement.style.transform = 'scale(1) rotate(0deg)', 400);
   }
-  setupMagneticButtons(); // Reiniciar para items del carrito
+  setupMagneticButtons(); 
 }
 
 function removeFromCart(productId) {
@@ -430,7 +418,6 @@ function removeFromCart(productId) {
   updateCartUI();
 }
 
-// --- MANEJO DE EVENTOS GENERALES ---
 cartBtn.addEventListener('click', () => { cartModal.style.display = 'flex'; document.body.style.overflow = 'hidden'; });
 
 function closeModal() { 
@@ -445,7 +432,6 @@ window.addEventListener('click', (e) => {
   if (e.target.classList.contains('modal')) { closeModal(); }
 });
 
-// checkoutBtn lógico de carrito completo (igual que buySingleItem pero con total)
 checkoutBtn.addEventListener('click', async () => {
   if (cart.length === 0) return alert('El carrito está vacío');
   
@@ -456,20 +442,32 @@ checkoutBtn.addEventListener('click', async () => {
   const sessionId = 'session_cart_' + Date.now();
   const buyOrder = 'orden_cart_' + Math.floor(Math.random() * 1000000);
   
+  const orderItems = cart.map(item => ({ id: item.id, name: item.name, quantity: item.quantity }));
+
   try {
     const response = await fetch('/api/webpay/create', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ amount: totalAmount, sessionId, buyOrder })
+      body: JSON.stringify({ amount: totalAmount, sessionId, buyOrder, items: orderItems })
     });
     const data = await response.json();
     if (data.url && data.token) {
       document.getElementById('webpay-form').action = data.url;
       document.getElementById('token_ws').value = data.token;
       document.getElementById('webpay-form').submit();
-    } else { alert('Error Webpay'); checkoutBtn.innerHTML = 'Pagar con Webpay'; checkoutBtn.disabled = false; }
-  } catch (error) { alert('Error server'); checkoutBtn.innerHTML = 'Pagar con Webpay'; checkoutBtn.disabled = false; }
+    } else { 
+        alert(data.error || 'Error Webpay'); 
+        checkoutBtn.innerHTML = 'Iniciar Pago Seguro con Webpay'; 
+        checkoutBtn.disabled = false; 
+    }
+  } catch (error) { 
+      alert('Error server'); 
+      checkoutBtn.innerHTML = 'Iniciar Pago Seguro con Webpay'; 
+      checkoutBtn.disabled = false; 
+  }
 });
+
+window.addEventListener('DOMContentLoaded', loadInitialData);
 </script>
 
 </body>
