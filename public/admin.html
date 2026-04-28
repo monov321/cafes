@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel de Administración - Café Laulhère</title>
+<link rel="stylesheet" href="styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="admin-body">
+
+<div id="login-screen" class="admin-login-container">
+    <div class="admin-login-box">
+        <h2>Entrar al Panel de Control</h2>
+        <input type="text" id="rut" class="admin-input" placeholder="Tu RUT (ej: 11111111-1)">
+        <input type="password" id="password" class="admin-input" placeholder="Tu Contraseña">
+        <button onclick="login()" class="primary-btn" style="width: 100%; padding: 18px; font-size: 1.3rem;">Ingresar de Forma Segura</button>
+    </div>
+</div>
+
+<div id="dashboard-screen" class="admin-dashboard">
+    <div class="admin-header">
+        <div>
+            <h2>Hola, Administrador</h2>
+            <p style="font-size: 1.2rem; color: #666;">Bienvenido a tu panel de control de Café Laulhère.</p>
+        </div>
+        <button onclick="logout()" class="logout-btn">Salir del Sistema</button>
+    </div>
+
+    <div class="admin-nav">
+        <button class="admin-nav-btn active" onclick="showSection('texts')">✏️ Cambiar Textos de la Página</button>
+        <button class="admin-nav-btn" onclick="showSection('products')">☕ Administrar Catálogo de Cafés</button>
+        <button class="admin-nav-btn" onclick="showSection('sales')">💰 Ver Ventas Recientes</button>
+    </div>
+
+    <div id="texts-section" class="admin-section active">
+        <h3>Cambiar Textos de la Página Principal</h3>
+        <p>Todo lo que modifiques aquí se cambiará de inmediato en la página que ven tus clientes. Escribe con confianza.</p>
+        <div id="text-editor-container"></div>
+        <div style="text-align: center; margin-top: 40px; border-top: 2px solid #eee; padding-top: 30px;">
+            <button onclick="saveTexts()" class="admin-save-btn">Guardar Todos los Textos</button>
+        </div>
+    </div>
+
+    <div id="products-section" class="admin-section">
+        <h3>Administrar Catálogo de Cafés</h3>
+        <p>Aquí puedes agregar un nuevo tipo de café, editar los que ya tienes (para cambiar el precio o el stock), o borrarlos si ya no los vas a vender.</p>
+        
+        <div style="background: #fafafa; padding: 40px; border-radius: 20px; margin-bottom: 40px; border: 2px solid #eee;">
+            <h4 id="form-title" style="margin-bottom: 30px; font-size: 1.8rem; color: #2b1810;">Agregar un Nuevo Café al Catálogo</h4>
+            <input type="hidden" id="prod-id">
+            
+            <div class="admin-form-row">
+                <div class="admin-form-col">
+                    <label>Nombre del Café</label>
+                    <input type="text" id="prod-name" class="admin-input" placeholder="Ej: Grano Arábica Colombiano">
+                </div>
+                <div class="admin-form-col">
+                    <label>Precio de Venta ($)</label>
+                    <input type="number" id="prod-price" class="admin-input" placeholder="Ej: 12000">
+                </div>
+            </div>
+            
+            <div class="admin-form-row">
+                <div class="admin-form-col">
+                    <label>Enlace de la Foto (URL)</label>
+                    <input type="text" id="prod-img" class="admin-input" placeholder="Pega aquí el enlace de la imagen">
+                    <div class="admin-helper-text">Debe empezar con http:// o https://</div>
+                </div>
+                <div class="admin-form-col">
+                    <label>País de Origen</label>
+                    <input type="text" id="prod-origin" class="admin-input" placeholder="Ej: Colombia, Valdivia">
+                </div>
+            </div>
+            
+            <div class="admin-form-row">
+                <div class="admin-form-col">
+                    <label>Nivel de Tueste</label>
+                    <input type="text" id="prod-roast" class="admin-input" placeholder="Ej: Medio, Oscuro, Claro">
+                </div>
+                <div class="admin-form-col">
+                    <label>Cantidad en Bodega (Stock)</label>
+                    <input type="number" id="prod-stock" class="admin-input" value="0">
+                </div>
+            </div>
+            
+            <div class="admin-form-group" style="border: none; padding: 0; background: transparent;">
+                <label style="font-size: 1.2rem; font-weight: 600; display: block; margin-bottom: 10px;">Descripción Detallada</label>
+                <textarea id="prod-desc" class="admin-textarea" placeholder="Escribe aquí los sabores, aromas y detalles de este café..."></textarea>
+            </div>
+            
+            <div style="margin-top: 30px;">
+                <button onclick="saveProduct()" class="admin-save-btn" id="prod-submit-btn">Guardar este Café</button>
+                <button onclick="resetProductForm()" class="admin-btn-danger" style="padding: 18px 30px; margin-left: 15px; background-color: #9e9e9e;">Limpiar Formulario</button>
+            </div>
+        </div>
+
+        <h4 style="font-size: 1.8rem; margin-bottom: 20px;">Tus Cafés Actuales</h4>
+        <div style="overflow-x: auto;">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Foto</th>
+                        <th>Nombre del Café</th>
+                        <th>Precio</th>
+                        <th>Stock Actual</th>
+                        <th>¿Qué deseas hacer?</th>
+                    </tr>
+                </thead>
+                <tbody id="products-table-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="sales-section" class="admin-section">
+        <h3>Ventas Completadas (Últimos 7 Días)</h3>
+        <p>Este es el registro automático de las personas que pagaron con éxito a través de Webpay.</p>
+        <div style="overflow-x: auto;">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Fecha de Compra</th>
+                        <th>Número de Orden</th>
+                        <th>Dinero Recibido</th>
+                        <th>Qué Compraron</th>
+                    </tr>
+                </thead>
+                <tbody id="sales-table-body"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+const nombresAmigables = {
+    'hero_subtitle': 'Texto Pequeño arriba del Título Principal',
+    'hero_title': 'Título Grande de la Portada',
+    'hero_desc': 'Descripción debajo del Título Principal',
+    'shipping_notice': 'Aviso de Despacho (La barra horizontal con el ícono de bicicleta)',
+    'exp_title': 'Título Grande de la Sección "Experiencia"',
+    'exp_desc1': 'Primer párrafo explicativo sobre tu proceso de tueste',
+    'exp_desc2': 'Segundo párrafo explicativo sobre tu proceso de tueste',
+    'about_p1': 'Primer párrafo de la sección "Nuestra Obsesión / Nosotros"',
+    'about_p2': 'Segundo párrafo de la sección "Nuestra Obsesión / Nosotros"'
+};
+
+let jwtToken = localStorage.getItem('adminToken');
+let allProducts = [];
+
+if (jwtToken) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('dashboard-screen').style.display = 'block';
+    loadAdminData();
+}
+
+async function login() {
+    const rut = document.getElementById('rut').value;
+    const password = document.getElementById('password').value;
+    
+    try {
+        const res = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ rut, password })
+        });
+        const data = await res.json();
+        
+        if (data.token) {
+            localStorage.setItem('adminToken', data.token);
+            jwtToken = data.token;
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('dashboard-screen').style.display = 'block';
+            loadAdminData();
+        } else {
+            alert("Los datos ingresados no son correctos. Por favor, intente de nuevo.");
+        }
+    } catch (e) {
+        alert('No se pudo conectar con el sistema. Revise su conexión a internet.');
+    }
+}
+
+function logout() {
+    localStorage.removeItem('adminToken');
+    location.reload();
+}
+
+function showSection(sectionId) {
+    document.querySelectorAll('.admin-section').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.admin-nav-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById(sectionId + '-section').classList.add('active');
+    event.currentTarget.classList.add('active');
+}
+
+async function loadAdminData() {
+    loadTexts();
+    loadProducts();
+    loadSales();
+}
+
+async function loadTexts() {
+    try {
+        const res = await fetch('/api/texts');
+        const texts = await res.json();
+        const container = document.getElementById('text-editor-container');
+        container.innerHTML = '';
+        
+        for (const key in texts) {
+            const etiqueta = nombresAmigables[key] || ("Texto interno: " + key);
+            container.innerHTML += `
+                <div class="admin-form-group">
+                    <label style="font-size: 1.3rem; font-weight: 700; color: #d4a373; display: block; margin-bottom: 15px;">${etiqueta}</label>
+                    <textarea id="text_${key}" class="admin-textarea">${texts[key]}</textarea>
+                </div>
+            `;
+        }
+    } catch(e) {
+        alert("Hubo un problema al cargar los textos.");
+    }
+}
+
+async function saveTexts() {
+    const textareas = document.querySelectorAll('.admin-textarea');
+    const updates = {};
+    textareas.forEach(ta => {
+        if(ta.id.startsWith('text_')) {
+            const key = ta.id.replace('text_', '');
+            updates[key] = ta.value;
+        }
+    });
+
+    try {
+        const res = await fetch('/api/admin/texts', {
+            method: 'PUT',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + jwtToken
+            },
+            body: JSON.stringify(updates)
+        });
+        
+        if (res.ok) {
+            alert('¡Excelente! Los textos se guardaron y ya están visibles en tu página principal.');
+        } else {
+            alert('Hubo un error al guardar. Su sesión podría haber caducado.');
+        }
+    } catch(e) {
+        alert('Error de conexión.');
+    }
+}
+
+async function loadProducts() {
+    try {
+        const res = await fetch('/api/products');
+        allProducts = await res.json();
+        const tbody = document.getElementById('products-table-body');
+        tbody.innerHTML = '';
+        
+        if(allProducts.length === 0){
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Aún no has agregado ningún café al catálogo.</td></tr>';
+            return;
+        }
+
+        allProducts.forEach(p => {
+            const stockColor = p.stock <= 3 ? '#d32f2f' : '#2e7d32';
+            tbody.innerHTML += `
+                <tr>
+                    <td><img src="${p.img}" class="prod-img-preview" alt="Foto"></td>
+                    <td style="font-size: 1.3rem;"><strong>${p.name}</strong></td>
+                    <td style="font-size: 1.3rem;">$${p.price.toLocaleString('es-CL')}</td>
+                    <td style="color: ${stockColor}; font-weight: 900; font-size: 1.5rem;">${p.stock}</td>
+                    <td>
+                        <button class="admin-btn-edit" onclick="editProduct(${p.id})">Editar Datos</button>
+                        <button class="admin-btn-danger" onclick="deleteProduct(${p.id})">Borrar Definitivo</button>
+                    </td>
+                </tr>
+            `;
+        });
+    } catch(e) {
+        console.error(e);
+    }
+}
+
+function editProduct(id) {
+    const p = allProducts.find(prod => prod.id === id);
+    if (!p) return;
+    
+    document.getElementById('form-title').innerText = 'Modificando: ' + p.name;
+    document.getElementById('form-title').style.color = '#d4a373';
+    document.getElementById('prod-submit-btn').innerText = 'Guardar Cambios de este Café';
+    
+    document.getElementById('prod-id').value = p.id;
+    document.getElementById('prod-name').value = p.name;
+    document.getElementById('prod-price').value = p.price;
+    document.getElementById('prod-img').value = p.img;
+    document.getElementById('prod-origin').value = p.origin;
+    document.getElementById('prod-roast').value = p.roast;
+    document.getElementById('prod-stock').value = p.stock;
+    document.getElementById('prod-desc').value = p.desc;
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function resetProductForm() {
+    document.getElementById('form-title').innerText = 'Agregar un Nuevo Café al Catálogo';
+    document.getElementById('form-title').style.color = '#2b1810';
+    document.getElementById('prod-submit-btn').innerText = 'Guardar este Café';
+    document.getElementById('prod-id').value = '';
+    document.getElementById('prod-name').value = '';
+    document.getElementById('prod-price').value = '';
+    document.getElementById('prod-img').value = '';
+    document.getElementById('prod-origin').value = '';
+    document.getElementById('prod-roast').value = '';
+    document.getElementById('prod-stock').value = '0';
+    document.getElementById('prod-desc').value = '';
+}
+
+async function saveProduct() {
+    const id = document.getElementById('prod-id').value;
+    const name = document.getElementById('prod-name').value;
+    const price = document.getElementById('prod-price').value;
+    
+    if(!name || !price) {
+        alert("Por favor, asegúrese de escribir al menos el nombre y el precio del café.");
+        return;
+    }
+
+    const productData = {
+        name: name,
+        price: price,
+        img: document.getElementById('prod-img').value || 'https://via.placeholder.com/500?text=Sin+Imagen',
+        origin: document.getElementById('prod-origin').value || 'Sin especificar',
+        roast: document.getElementById('prod-roast').value || 'Medio',
+        stock: document.getElementById('prod-stock').value || 0,
+        desc: document.getElementById('prod-desc').value || 'Un café de especialidad preparado con dedicación.'
+    };
+
+    const method = id ? 'PUT' : 'POST';
+    const url = id ? `/api/admin/products/${id}` : '/api/admin/products';
+
+    try {
+        const res = await fetch(url, {
+            method: method,
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + jwtToken
+            },
+            body: JSON.stringify(productData)
+        });
+
+        if (res.ok) {
+            resetProductForm();
+            loadProducts();
+            alert('¡El café se guardó correctamente en tu catálogo!');
+        } else {
+            alert('Hubo un problema al guardar el producto.');
+        }
+    } catch(e) {
+        alert('Error de conexión.');
+    }
+}
+
+async function deleteProduct(id) {
+    if (!confirm('¿Está seguro que desea eliminar este café para siempre? Si solo se quedó sin stock, es mejor editarlo y poner el stock en 0.')) return;
+
+    try {
+        const res = await fetch(`/api/admin/products/${id}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': 'Bearer ' + jwtToken }
+        });
+
+        if (res.ok) {
+            loadProducts();
+            alert("El café ha sido eliminado de su página.");
+        } else {
+            alert('No se pudo borrar el producto.');
+        }
+    } catch(e) {
+        alert("Error de conexión.");
+    }
+}
+
+async function loadSales() {
+    try {
+        const res = await fetch('/api/admin/orders', {
+            headers: { 'Authorization': 'Bearer ' + jwtToken }
+        });
+        const orders = await res.json();
+        const tbody = document.getElementById('sales-table-body');
+        tbody.innerHTML = '';
+        
+        if(orders.length === 0){
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Aún no hay ventas pagadas en los últimos 7 días.</td></tr>';
+            return;
+        }
+
+        orders.forEach(o => {
+            const date = new Date(o.date).toLocaleString('es-CL', { dateStyle: 'full', timeStyle: 'short' });
+            const items = o.items.map(i => `${i.quantity} unidad(es) de ${i.name}`).join(' y ');
+            tbody.innerHTML += `
+                <tr>
+                    <td>${date}</td>
+                    <td style="color: #666;">${o.buyOrder}</td>
+                    <td style="color: #2e7d32; font-weight: bold; font-size: 1.3rem;">$${o.amount.toLocaleString('es-CL')}</td>
+                    <td style="font-size: 1.1rem; color: #333;">${items}</td>
+                </tr>
+            `;
+        });
+    } catch(e) {
+        console.error(e);
+    }
+}
+</script>
+
+</body>
+</html>
