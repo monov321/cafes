@@ -1,20 +1,62 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const { WebpayPlus, Options, IntegrationApiKeys, Environment, IntegrationCommerceCodes } = require('transbank-sdk');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const JWT_SECRET = ' SANJLODJALKDJAKLDSAJDKLAJDAKDLSAD';
 
 app.use(cors({
     origin: '*',
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ extended: true, limit: '5mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
+
+mongoose.connect('mongodb+srv://vuduUser:DLp7Bjxj7YABx30q@cluster0.nrw4x.mongodb.net/?appName=Cluster0');
+
+const adminSchema = new mongoose.Schema({
+    rut: { type: String, required: true, unique: true },
+    password: { type: String, required: true }
+});
+
+const productSchema = new mongoose.Schema({
+    id: { type: Number, required: true, unique: true },
+    name: String,
+    price: Number,
+    img: String,
+    desc: String,
+    origin: String,
+    roast: String,
+    stock: { type: Number, default: 0 }
+});
+
+const textSchema = new mongoose.Schema({
+    key: { type: String, required: true, unique: true },
+    value: String
+});
+
+const orderSchema = new mongoose.Schema({
+    buyOrder: String,
+    sessionId: String,
+    amount: Number,
+    token: String,
+    status: String,
+    date: { type: Date, default: Date.now },
+    items: Array
+});
+
+const Admin = mongoose.model('Admin', adminSchema);
+const Product = mongoose.model('Product', productSchema);
+const TextContent = mongoose.model('TextContent', textSchema);
+const Order = mongoose.model('Order', orderSchema);
 
 const tx = new WebpayPlus.Transaction(
     new Options(
@@ -24,30 +66,150 @@ const tx = new WebpayPlus.Transaction(
     )
 );
 
-app.get('/api/health', (req, res) => {
-    res.status(200).json({ 
-        status: 'OK', 
-        timestamp: new Date().toISOString(),
-        message: 'Servidor NovaCafe operativo' 
+const verifyToken = (req, res, next) => {
+    const token = req.headers['authorization'];
+    if (!token) return res.status(403).json({ error: 'No token provided' });
+    jwt.verify(token.split(' ')[1], JWT_SECRET, (err, decoded) => {
+        if (err) return res.status(401).json({ error: 'Unauthorized' });
+        req.adminId = decoded.id;
+        next();
     });
+};
+
+app.post('/api/auth/login', async (req, res) => {
+    const { rut, password } = req.body;
+    try {
+        const admin = await Admin.findOne({ rut });
+        if (!admin) return res.status(404).json({ error: 'Admin no encontrado' });
+        const validPassword = await bcrypt.compare(password, admin.password);
+        if (!validPassword) return res.status(401).json({ error: 'Contraseña incorrecta' });
+        const token = jwt.sign({ id: admin._id }, JWT_SECRET, { expiresIn: '24h' });
+        res.status(200).json({ token });
+    } catch (error) {
+        res.status(500).json({ error: 'Error del servidor' });
+    }
 });
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+app.get('/api/products', async (req, res) => {
+    try {
+        const products = await Product.find().sort({ id: 1 });
+        res.status(200).json(products);
+    } catch (error) {
+        res.status(500).json({ error: 'Error al obtener productos' });
+    }
+});
+
+app.post('/api/admin/products', verifyToken, async (req, res) => {
+    try {
+        const highestProduct = await Product.findOne().sort({ id: -1 });
+        const newId = highestProduct ? highestProduct.id + 1 : 1;
+        
+        const newProduct = new Product({
+            id: newId,
+            name: req.body.name,
+            price: Number(req.body.price),
+            img: req.body.img,
+            desc: req.body.desc,
+            origin: req.body.origin,
+            roast: req.body.roast,
+            stock: Number(req.body.stock)
+        });
+        await newProduct.save();
+        res.status(201).json(newProduct);
+    } catch (error) {
+        res.status(500).json({ error: 'Error al crear producto' });
+    }
+});
+
+app.put('/api/admin/products/:id', verifyToken, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updatedProduct = await Product.findOneAndUpdate(
+            { id: Number(id) },
+            {
+                name: req.body.name,
+                price: Number(req.body.price),
+                img: req.body.img,
+                desc: req.body.desc,
+                origin: req.body.origin,
+                roast: req.body.roast,
+                stock: Number(req.body.stock)
+            },
+            { new: true }
+        );
+        res.status(200).json(updatedProduct);
+    } catch (error) {
+        res.status(500).json({ error: 'Error al actualizar producto' });
+    }
+});
+
+app.delete('/api/admin/products/:id', verifyToken, async (req, res) => {
+    try {
+        const { id } = req.params;
+        await Product.findOneAndDelete({ id: Number(id) });
+        res.status(200).json({ message: 'Producto eliminado' });
+    } catch (error) {
+        res.status(500).json({ error: 'Error al eliminar producto' });
+    }
+});
+
+app.get('/api/texts', async (req, res) => {
+    try {
+        const texts = await TextContent.find();
+        const textMap = {};
+        texts.forEach(t => textMap[t.key] = t.value);
+        res.status(200).json(textMap);
+    } catch (error) {
+        res.status(500).json({ error: 'Error al obtener textos' });
+    }
+});
+
+app.put('/api/admin/texts', verifyToken, async (req, res) => {
+    try {
+        const updates = req.body;
+        for (const key in updates) {
+            await TextContent.findOneAndUpdate({ key }, { value: updates[key] }, { upsert: true });
+        }
+        res.status(200).json({ message: 'Textos actualizados' });
+    } catch (error) {
+        res.status(500).json({ error: 'Error al actualizar textos' });
+    }
+});
+
+app.get('/api/admin/orders', verifyToken, async (req, res) => {
+    try {
+        const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+        const orders = await Order.find({ date: { $gte: sevenDaysAgo }, status: 'AUTHORIZED' }).sort({ date: -1 });
+        res.status(200).json(orders);
+    } catch (error) {
+        res.status(500).json({ error: 'Error al obtener órdenes' });
+    }
 });
 
 app.post('/api/webpay/create', async (req, res, next) => {
     try {
-        const { amount, sessionId, buyOrder } = req.body;
-        const returnUrl = `http://localhost:${PORT}/api/webpay/commit`;
+        const { amount, sessionId, buyOrder, items } = req.body;
         
-        const createResponse = await tx.create(
+        for (const item of items) {
+            const product = await Product.findOne({ id: item.id });
+            if (!product || product.stock < item.quantity) {
+                return res.status(400).json({ error: `Stock insuficiente para ${item.name}` });
+            }
+        }
+
+        const returnUrl = `http://localhost:${PORT}/api/webpay/commit`;
+        const createResponse = await tx.create(buyOrder, sessionId, amount, returnUrl);
+        
+        const newOrder = new Order({
             buyOrder,
             sessionId,
             amount,
-            returnUrl
-        );
-        
+            token: createResponse.token,
+            status: 'PENDING',
+            items
+        });
+        await newOrder.save();
+
         res.status(200).json({
             url: createResponse.url,
             token: createResponse.token
@@ -88,8 +250,16 @@ app.get('/api/webpay/commit', async (req, res, next) => {
         }
         
         const commitResponse = await tx.commit(token);
-        
+        const order = await Order.findOne({ token });
+
         if (commitResponse.status === 'AUTHORIZED') {
+            order.status = 'AUTHORIZED';
+            await order.save();
+
+            for (const item of order.items) {
+                await Product.findOneAndUpdate({ id: item.id }, { $inc: { stock: -item.quantity } });
+            }
+
             res.send(`
             <!DOCTYPE html>
             <html lang="es">
@@ -121,6 +291,9 @@ app.get('/api/webpay/commit', async (req, res, next) => {
             </html>
             `);
         } else {
+            order.status = 'REJECTED';
+            await order.save();
+
             res.send(`
             <!DOCTYPE html>
             <html lang="es">
@@ -155,11 +328,10 @@ app.use((req, res) => {
 });
 
 app.use((err, req, res, next) => {
-    console.error(err);
     const statusCode = err.statusCode || 500;
     res.status(statusCode).json({
         error: 'Error Interno del Servidor',
-        message: err.message || 'Ha ocurrido un error inesperado al procesar la solicitud con Transbank'
+        message: err.message || 'Ha ocurrido un error inesperado al procesar la solicitud'
     });
 });
 
