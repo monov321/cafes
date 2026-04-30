@@ -2,414 +2,1168 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Panel de Administración - Café Laulhère</title>
-<link rel="stylesheet" href="styles.css">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-</head>
-<body class="admin-body">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Panel — Café Laulhère</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ─── RESET & BASE ─── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-<div id="login-screen" class="admin-login-container">
-    <div class="admin-login-box">
-        <h2>Entrar al Panel de Control</h2>
-        <input type="text" id="rut" class="admin-input" placeholder="Tu RUT (ej: 11111111-1)">
-        <input type="password" id="password" class="admin-input" placeholder="Tu Contraseña">
-        <button onclick="login()" class="primary-btn" style="width: 100%; padding: 18px; font-size: 1.3rem;">Ingresar de Forma Segura</button>
+  :root {
+    --ink:       #0f0d0a;
+    --cream:     #fdf8f0;
+    --parchment: #f5ede0;
+    --espresso:  #2b1810;
+    --roast:     #6b3a2a;
+    --gold:      #c9973a;
+    --gold-pale: #e8c87a;
+    --steam:     #a89880;
+    --fog:       #d4c9bc;
+    --danger:    #c0392b;
+    --success:   #27ae60;
+    --warn:      #e67e22;
+
+    --radius-sm: 8px;
+    --radius:    16px;
+    --radius-lg: 24px;
+
+    --sidebar-w: 280px;
+    --header-h:  72px;
+
+    --font-display: 'Cormorant Garamond', Georgia, serif;
+    --font-mono:    'DM Mono', monospace;
+    --font-sans:    'DM Sans', sans-serif;
+
+    --transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--ink);
+    color: var(--cream);
+    min-height: 100vh;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ─── SCROLLBAR ─── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--espresso); }
+  ::-webkit-scrollbar-thumb { background: var(--roast); border-radius: 3px; }
+
+  /* ─── LOGIN ─── */
+  .login-wrap {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 80%, rgba(107,58,42,0.4) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 20%, rgba(201,151,58,0.15) 0%, transparent 50%),
+      var(--ink);
+    padding: 24px;
+  }
+
+  .login-card {
+    width: 100%;
+    max-width: 420px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(201,151,58,0.25);
+    border-radius: var(--radius-lg);
+    padding: clamp(32px, 6vw, 56px);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .login-logo {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 6vw, 2.8rem);
+    font-weight: 700;
+    color: var(--gold);
+    text-align: center;
+    letter-spacing: 0.02em;
+    margin-bottom: 6px;
+  }
+  .login-sub {
+    text-align: center;
+    font-size: 0.8rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--steam);
+    margin-bottom: 40px;
+  }
+
+  .field {
+    margin-bottom: 18px;
+  }
+  .field label {
+    display: block;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--steam);
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  .field input {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(168,152,128,0.3);
+    border-radius: var(--radius-sm);
+    color: var(--cream);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    padding: 14px 16px;
+    outline: none;
+    transition: border-color var(--transition), box-shadow var(--transition);
+    -webkit-appearance: none;
+  }
+  .field input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,151,58,0.18);
+  }
+  .field input::placeholder { color: rgba(168,152,128,0.5); }
+
+  .btn-primary {
+    width: 100%;
+    margin-top: 8px;
+    background: linear-gradient(135deg, var(--gold), #a0742a);
+    border: none;
+    border-radius: var(--radius-sm);
+    color: var(--espresso);
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 16px;
+    cursor: pointer;
+    transition: opacity var(--transition), transform var(--transition);
+  }
+  .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0); }
+
+  /* ─── APP SHELL ─── */
+  .app { display: none; min-height: 100vh; }
+  .app.visible { display: flex; flex-direction: column; }
+
+  /* ─── TOP BAR ─── */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: var(--header-h);
+    background: rgba(15,13,10,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(201,151,58,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 clamp(16px, 4vw, 32px);
+    gap: 16px;
+  }
+
+  .topbar-brand {
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 4vw, 1.9rem);
+    font-weight: 700;
+    color: var(--gold);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .topbar-brand span {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--steam);
+    font-size: 0.85em;
+    margin-left: 8px;
+    display: none;
+  }
+  @media(min-width:600px){ .topbar-brand span { display: inline; } }
+
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+
+  .badge-admin {
+    background: rgba(201,151,58,0.12);
+    border: 1px solid rgba(201,151,58,0.3);
+    color: var(--gold-pale);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-weight: 500;
+    display: none;
+  }
+  @media(min-width:480px){ .badge-admin { display: inline-block; } }
+
+  .btn-logout {
+    background: rgba(192,57,43,0.12);
+    border: 1px solid rgba(192,57,43,0.3);
+    color: #e88;
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    padding: 9px 16px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background var(--transition);
+    white-space: nowrap;
+  }
+  .btn-logout:hover { background: rgba(192,57,43,0.22); }
+
+  /* ─── NAV TABS ─── */
+  .nav-tabs {
+    display: flex;
+    gap: 4px;
+    padding: clamp(12px, 3vw, 20px) clamp(16px, 4vw, 32px) 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .nav-tabs::-webkit-scrollbar { display: none; }
+
+  .nav-tab {
+    flex-shrink: 0;
+    background: transparent;
+    border: 1px solid rgba(168,152,128,0.2);
+    border-bottom: none;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    color: var(--steam);
+    font-family: var(--font-sans);
+    font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+    font-weight: 500;
+    padding: clamp(10px, 2.5vw, 14px) clamp(14px, 3vw, 24px);
+    cursor: pointer;
+    transition: all var(--transition);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .nav-tab .icon { font-size: 1em; }
+  .nav-tab:hover { color: var(--cream); background: rgba(255,255,255,0.04); }
+  .nav-tab.active {
+    background: rgba(43,24,16,0.9);
+    border-color: rgba(201,151,58,0.35);
+    color: var(--gold-pale);
+  }
+
+  /* ─── MAIN CONTENT ─── */
+  .main {
+    padding: clamp(20px, 4vw, 36px) clamp(16px, 4vw, 32px);
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    animation: fadeUp 0.3s ease both;
+  }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .section-header {
+    margin-bottom: clamp(24px, 4vw, 40px);
+    border-bottom: 1px solid rgba(201,151,58,0.2);
+    padding-bottom: 20px;
+  }
+  .section-header h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
+    font-weight: 700;
+    color: var(--cream);
+    line-height: 1.2;
+  }
+  .section-header p {
+    color: var(--steam);
+    font-size: clamp(0.85rem, 2.2vw, 0.95rem);
+    margin-top: 6px;
+  }
+
+  /* ─── CARDS ─── */
+  .card {
+    background: rgba(43,24,16,0.5);
+    border: 1px solid rgba(201,151,58,0.15);
+    border-radius: var(--radius);
+    padding: clamp(20px, 4vw, 32px);
+    margin-bottom: 24px;
+  }
+  .card-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 3vw, 1.7rem);
+    font-weight: 600;
+    color: var(--gold-pale);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* ─── FORM FIELDS ─── */
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+    gap: 16px;
+  }
+  .form-grid.cols-1 { grid-template-columns: 1fr; }
+
+  .form-group { display: flex; flex-direction: column; gap: 8px; }
+  .form-group label {
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--steam);
+    font-weight: 500;
+  }
+
+  .inp, .txta {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(168,152,128,0.25);
+    border-radius: var(--radius-sm);
+    color: var(--cream);
+    font-family: var(--font-sans);
+    font-size: clamp(0.9rem, 2.5vw, 1rem);
+    padding: 13px 15px;
+    outline: none;
+    width: 100%;
+    transition: border-color var(--transition), box-shadow var(--transition);
+    -webkit-appearance: none;
+  }
+  .inp:focus, .txta:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,151,58,0.15);
+  }
+  .inp::placeholder, .txta::placeholder { color: rgba(168,152,128,0.4); }
+
+  .txta {
+    resize: vertical;
+    min-height: 110px;
+    line-height: 1.6;
+  }
+  .txta.tall { min-height: 160px; }
+
+  .helper-text {
+    font-size: 0.75rem;
+    color: var(--steam);
+    opacity: 0.7;
+    margin-top: -4px;
+  }
+
+  /* ─── BUTTONS ─── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-sans);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition);
+    white-space: nowrap;
+    -webkit-appearance: none;
+    text-decoration: none;
+  }
+
+  .btn-gold {
+    background: linear-gradient(135deg, var(--gold), #a0742a);
+    color: var(--espresso);
+    font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    padding: clamp(12px, 3vw, 16px) clamp(20px, 4vw, 32px);
+  }
+  .btn-gold:hover { opacity: 0.88; transform: translateY(-1px); }
+
+  .btn-ghost {
+    background: transparent;
+    border: 1px solid rgba(168,152,128,0.3);
+    color: var(--steam);
+    font-size: clamp(0.8rem, 2vw, 0.88rem);
+    padding: clamp(10px, 2.5vw, 13px) clamp(16px, 3vw, 24px);
+  }
+  .btn-ghost:hover { border-color: var(--gold); color: var(--gold-pale); }
+
+  .btn-danger {
+    background: rgba(192,57,43,0.15);
+    border: 1px solid rgba(192,57,43,0.3);
+    color: #e88;
+    font-size: clamp(0.78rem, 2vw, 0.85rem);
+    padding: clamp(9px, 2vw, 12px) clamp(14px, 3vw, 20px);
+  }
+  .btn-danger:hover { background: rgba(192,57,43,0.28); }
+
+  .btn-edit {
+    background: rgba(201,151,58,0.12);
+    border: 1px solid rgba(201,151,58,0.25);
+    color: var(--gold-pale);
+    font-size: clamp(0.78rem, 2vw, 0.85rem);
+    padding: clamp(9px, 2vw, 12px) clamp(14px, 3vw, 20px);
+  }
+  .btn-edit:hover { background: rgba(201,151,58,0.22); }
+
+  .btn-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 24px;
+    align-items: center;
+  }
+
+  /* ─── TEXT EDITOR ─── */
+  .text-block {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(168,152,128,0.15);
+    border-radius: var(--radius);
+    padding: clamp(16px, 3vw, 24px);
+    margin-bottom: 16px;
+    transition: border-color var(--transition);
+  }
+  .text-block:focus-within { border-color: rgba(201,151,58,0.35); }
+  .text-block-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+
+  /* ─── TABLE ─── */
+  .table-wrap { overflow-x: auto; border-radius: var(--radius); }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: clamp(0.82rem, 2vw, 0.92rem);
+  }
+  thead th {
+    background: rgba(43,24,16,0.8);
+    color: var(--steam);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 500;
+    padding: 14px 16px;
+    text-align: left;
+    white-space: nowrap;
+    border-bottom: 1px solid rgba(201,151,58,0.2);
+  }
+  tbody tr {
+    border-bottom: 1px solid rgba(168,152,128,0.1);
+    transition: background var(--transition);
+  }
+  tbody tr:hover { background: rgba(255,255,255,0.025); }
+  tbody td {
+    padding: clamp(12px, 2.5vw, 16px);
+    vertical-align: middle;
+    color: var(--cream);
+  }
+
+  .prod-thumb {
+    width: 52px;
+    height: 52px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid rgba(201,151,58,0.2);
+    flex-shrink: 0;
+  }
+
+  .prod-name {
+    font-family: var(--font-display);
+    font-size: clamp(1rem, 2.5vw, 1.15rem);
+    font-weight: 600;
+  }
+
+  .price-tag {
+    font-family: var(--font-mono);
+    font-size: clamp(0.85rem, 2vw, 0.95rem);
+    color: var(--gold-pale);
+  }
+
+  .stock-tag {
+    font-family: var(--font-mono);
+    font-size: clamp(1rem, 2.5vw, 1.15rem);
+    font-weight: 500;
+  }
+  .stock-ok  { color: var(--success); }
+  .stock-low { color: var(--warn); }
+  .stock-out { color: var(--danger); }
+
+  .action-cell {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  /* ─── PRODUCT CARD (mobile fallback) ─── */
+  .prod-cards { display: none; }
+
+  @media(max-width: 700px) {
+    .prod-table-wrap { display: none; }
+    .prod-cards { display: flex; flex-direction: column; gap: 14px; }
+
+    .prod-card {
+      background: rgba(43,24,16,0.5);
+      border: 1px solid rgba(201,151,58,0.15);
+      border-radius: var(--radius);
+      padding: 16px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .prod-card-info { flex: 1; min-width: 0; }
+    .prod-card-name {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--cream);
+    }
+    .prod-card-meta {
+      font-size: 0.8rem;
+      color: var(--steam);
+      margin-top: 4px;
+    }
+    .prod-card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+  }
+
+  /* ─── STATS ROW ─── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 180px), 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .stat-card {
+    background: rgba(43,24,16,0.5);
+    border: 1px solid rgba(201,151,58,0.15);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+  .stat-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--steam);
+    margin-bottom: 8px;
+  }
+  .stat-value {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    font-weight: 700;
+    color: var(--gold-pale);
+    line-height: 1;
+  }
+  .stat-sub {
+    font-size: 0.75rem;
+    color: var(--steam);
+    margin-top: 4px;
+  }
+
+  /* ─── TOAST ─── */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    background: rgba(15,13,10,0.95);
+    border: 1px solid rgba(201,151,58,0.4);
+    border-radius: var(--radius);
+    padding: 16px 22px;
+    font-size: 0.9rem;
+    color: var(--cream);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-width: calc(100vw - 48px);
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    pointer-events: none;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast-icon { font-size: 1.2rem; flex-shrink: 0; }
+  .toast.success { border-color: rgba(39,174,96,0.5); }
+  .toast.error   { border-color: rgba(192,57,43,0.5); }
+
+  /* ─── ORDER DATE ─── */
+  .order-date { font-size: 0.82rem; color: var(--steam); }
+  .order-id   { font-family: var(--font-mono); font-size: 0.78rem; color: rgba(168,152,128,0.6); }
+  .order-amount { font-family: var(--font-mono); font-size: 1rem; color: var(--success); font-weight: 500; }
+  .order-items { font-size: 0.85rem; color: var(--cream); }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── DIVIDER ─── */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,151,58,0.25), transparent);
+    margin: 28px 0;
+  }
+
+  /* ─── FORM STATUS BAR ─── */
+  .form-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(201,151,58,0.1);
+    border: 1px solid rgba(201,151,58,0.3);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    font-size: 0.85rem;
+    color: var(--gold-pale);
+    margin-bottom: 20px;
+    display: none;
+  }
+  .form-status.visible { display: flex; }
+
+  /* ─── EMPTY STATE ─── */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--steam);
+  }
+  .empty-state .emo { font-size: 3rem; margin-bottom: 16px; }
+  .empty-state p { font-size: 0.9rem; }
+</style>
+</head>
+<body>
+
+<!-- ══════════ LOGIN ══════════ -->
+<div class="login-wrap" id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">Café Laulhère</div>
+    <div class="login-sub">Panel de Administración</div>
+
+    <div class="field">
+      <label>RUT del Administrador</label>
+      <input type="text" id="rut" placeholder="11111111-1" inputmode="text" autocomplete="username">
     </div>
+    <div class="field">
+      <label>Contraseña</label>
+      <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter') login()">
+    </div>
+    <button class="btn btn-primary" onclick="login()">Ingresar</button>
+  </div>
 </div>
 
-<div id="dashboard-screen" class="admin-dashboard">
-    <div class="admin-header">
-        <div>
-            <h2>Hola, Administrador</h2>
-            <p style="font-size: 1.2rem; color: #666;">Bienvenido a tu panel de control de Café Laulhère.</p>
-        </div>
-        <button onclick="logout()" class="logout-btn">Salir del Sistema</button>
+<!-- ══════════ APP ══════════ -->
+<div class="app" id="app">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-brand">Laulhère <span>Admin</span></div>
+    <div class="topbar-right">
+      <span class="badge-admin">Administrador</span>
+      <button class="btn-logout" onclick="logout()">Salir</button>
+    </div>
+  </header>
+
+  <!-- NAV TABS -->
+  <nav class="nav-tabs">
+    <button class="nav-tab active" onclick="showSection('texts', this)">
+      <span class="icon">✏️</span> Textos
+    </button>
+    <button class="nav-tab" onclick="showSection('products', this)">
+      <span class="icon">☕</span> Catálogo
+    </button>
+    <button class="nav-tab" onclick="showSection('sales', this)">
+      <span class="icon">💰</span> Ventas
+    </button>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- ── TEXTS ── -->
+    <div id="texts-section" class="section active">
+      <div class="section-header">
+        <h2>Textos de la Página</h2>
+        <p>Todo lo que edites aquí se refleja de inmediato en la tienda.</p>
+      </div>
+      <div id="text-editor-container"></div>
+      <div class="btn-row">
+        <button class="btn btn-gold" onclick="saveTexts()">💾 Guardar todos los cambios</button>
+      </div>
     </div>
 
-    <div class="admin-nav">
-        <button class="admin-nav-btn active" onclick="showSection('texts')">✏️ Cambiar Textos de la Página</button>
-        <button class="admin-nav-btn" onclick="showSection('products')">☕ Administrar Catálogo de Cafés</button>
-        <button class="admin-nav-btn" onclick="showSection('sales')">💰 Ver Ventas Recientes</button>
-    </div>
+    <!-- ── PRODUCTS ── -->
+    <div id="products-section" class="section">
+      <div class="section-header">
+        <h2>Catálogo de Cafés</h2>
+        <p>Agrega, edita o elimina productos de tu tienda.</p>
+      </div>
 
-    <div id="texts-section" class="admin-section active">
-        <h3>Cambiar Textos de la Página Principal</h3>
-        <p>Todo lo que modifiques aquí se cambiará de inmediato en la página que ven tus clientes. Escribe con confianza.</p>
-        <div id="text-editor-container"></div>
-        <div style="text-align: center; margin-top: 40px; border-top: 2px solid #eee; padding-top: 30px;">
-            <button onclick="saveTexts()" class="admin-save-btn">Guardar Todos los Textos</button>
-        </div>
-    </div>
+      <!-- FORM STATUS -->
+      <div class="form-status" id="form-status">
+        <span>✏️</span>
+        <span id="form-status-text">Editando producto</span>
+        <button class="btn btn-ghost" style="padding:6px 14px; font-size:0.78rem; margin-left:auto;" onclick="resetProductForm()">Cancelar edición</button>
+      </div>
 
-    <div id="products-section" class="admin-section">
-        <h3>Administrar Catálogo de Cafés</h3>
-        <p>Aquí puedes agregar un nuevo tipo de café, editar los que ya tienes (para cambiar el precio o el stock), o borrarlos si ya no los vas a vender.</p>
-        
-        <div style="background: #fafafa; padding: 40px; border-radius: 20px; margin-bottom: 40px; border: 2px solid #eee;">
-            <h4 id="form-title" style="margin-bottom: 30px; font-size: 1.8rem; color: #2b1810;">Agregar un Nuevo Café al Catálogo</h4>
-            <input type="hidden" id="prod-id">
-            
-            <div class="admin-form-row">
-                <div class="admin-form-col">
-                    <label>Nombre del Café</label>
-                    <input type="text" id="prod-name" class="admin-input" placeholder="Ej: Grano Arábica Colombiano">
-                </div>
-                <div class="admin-form-col">
-                    <label>Precio de Venta ($)</label>
-                    <input type="number" id="prod-price" class="admin-input" placeholder="Ej: 12000">
-                </div>
-            </div>
-            
-            <div class="admin-form-row">
-                <div class="admin-form-col">
-                    <label>Enlace de la Foto (URL)</label>
-                    <input type="text" id="prod-img" class="admin-input" placeholder="Pega aquí el enlace de la imagen">
-                    <div class="admin-helper-text">Debe empezar con http:// o https://</div>
-                </div>
-                <div class="admin-form-col">
-                    <label>País de Origen</label>
-                    <input type="text" id="prod-origin" class="admin-input" placeholder="Ej: Colombia, Valdivia">
-                </div>
-            </div>
-            
-            <div class="admin-form-row">
-                <div class="admin-form-col">
-                    <label>Nivel de Tueste</label>
-                    <input type="text" id="prod-roast" class="admin-input" placeholder="Ej: Medio, Oscuro, Claro">
-                </div>
-                <div class="admin-form-col">
-                    <label>Cantidad en Bodega (Stock)</label>
-                    <input type="number" id="prod-stock" class="admin-input" value="0">
-                </div>
-            </div>
-            
-            <div class="admin-form-group" style="border: none; padding: 0; background: transparent;">
-                <label style="font-size: 1.2rem; font-weight: 600; display: block; margin-bottom: 10px;">Descripción Detallada</label>
-                <textarea id="prod-desc" class="admin-textarea" placeholder="Escribe aquí los sabores, aromas y detalles de este café..."></textarea>
-            </div>
-            
-            <div style="margin-top: 30px;">
-                <button onclick="saveProduct()" class="admin-save-btn" id="prod-submit-btn">Guardar este Café</button>
-                <button onclick="resetProductForm()" class="admin-btn-danger" style="padding: 18px 30px; margin-left: 15px; background-color: #9e9e9e;">Limpiar Formulario</button>
-            </div>
+      <!-- PRODUCT FORM -->
+      <div class="card">
+        <div class="card-title" id="form-card-title">☕ Nuevo Café</div>
+        <input type="hidden" id="prod-id">
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Nombre del Café</label>
+            <input type="text" id="prod-name" class="inp" placeholder="Arábica Colombiano">
+          </div>
+          <div class="form-group">
+            <label>Precio ($)</label>
+            <input type="number" id="prod-price" class="inp" placeholder="12000" inputmode="numeric">
+          </div>
+          <div class="form-group">
+            <label>Foto (URL)</label>
+            <input type="text" id="prod-img" class="inp" placeholder="https://...">
+            <span class="helper-text">Debe comenzar con https://</span>
+          </div>
+          <div class="form-group">
+            <label>País de Origen</label>
+            <input type="text" id="prod-origin" class="inp" placeholder="Colombia">
+          </div>
+          <div class="form-group">
+            <label>Nivel de Tueste</label>
+            <input type="text" id="prod-roast" class="inp" placeholder="Medio / Oscuro / Claro">
+          </div>
+          <div class="form-group">
+            <label>Stock en Bodega</label>
+            <input type="number" id="prod-stock" class="inp" value="0" inputmode="numeric">
+          </div>
         </div>
 
-        <h4 style="font-size: 1.8rem; margin-bottom: 20px;">Tus Cafés Actuales</h4>
-        <div style="overflow-x: auto;">
-            <table class="admin-table">
-                <thead>
-                    <tr>
-                        <th>Foto</th>
-                        <th>Nombre del Café</th>
-                        <th>Precio</th>
-                        <th>Stock Actual</th>
-                        <th>¿Qué deseas hacer?</th>
-                    </tr>
-                </thead>
-                <tbody id="products-table-body"></tbody>
-            </table>
+        <div class="form-group" style="margin-top:16px;">
+          <label>Descripción Detallada</label>
+          <textarea id="prod-desc" class="txta tall" placeholder="Sabores, aromas y notas de este café..."></textarea>
         </div>
+
+        <div class="btn-row">
+          <button class="btn btn-gold" id="prod-submit-btn" onclick="saveProduct()">💾 Guardar Café</button>
+          <button class="btn btn-ghost" onclick="resetProductForm()">Limpiar</button>
+        </div>
+      </div>
+
+      <!-- PRODUCTS LIST — table (desktop) -->
+      <div class="card prod-table-wrap">
+        <div class="card-title">Tu Catálogo</div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Foto</th>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="products-table-body">
+              <tr><td colspan="5"><div class="empty-state"><div class="emo">☕</div><p>Cargando catálogo...</p></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PRODUCTS LIST — cards (mobile) -->
+      <div class="prod-cards" id="prod-cards-container"></div>
     </div>
 
-    <div id="sales-section" class="admin-section">
-        <h3>Ventas Completadas (Últimos 7 Días)</h3>
-        <p>Este es el registro automático de las personas que pagaron con éxito a través de Webpay.</p>
-        <div style="overflow-x: auto;">
-            <table class="admin-table">
-                <thead>
-                    <tr>
-                        <th>Fecha de Compra</th>
-                        <th>Número de Orden</th>
-                        <th>Dinero Recibido</th>
-                        <th>Qué Compraron</th>
-                    </tr>
-                </thead>
-                <tbody id="sales-table-body"></tbody>
-            </table>
+    <!-- ── SALES ── -->
+    <div id="sales-section" class="section">
+      <div class="section-header">
+        <h2>Ventas Recientes</h2>
+        <p>Transacciones autorizadas por Webpay en los últimos 7 días.</p>
+      </div>
+
+      <div class="stats-row" id="stats-row">
+        <div class="stat-card">
+          <div class="stat-label">Total recaudado</div>
+          <div class="stat-value" id="stat-total">—</div>
+          <div class="stat-sub">Últimos 7 días</div>
         </div>
+        <div class="stat-card">
+          <div class="stat-label">Órdenes pagadas</div>
+          <div class="stat-value" id="stat-count">—</div>
+          <div class="stat-sub">Transacciones OK</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Ticket promedio</div>
+          <div class="stat-value" id="stat-avg">—</div>
+          <div class="stat-sub">Por orden</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Orden</th>
+                <th>Monto</th>
+                <th>Ítems</th>
+              </tr>
+            </thead>
+            <tbody id="sales-table-body">
+              <tr><td colspan="4"><div class="empty-state"><div class="emo">📊</div><p>Cargando ventas...</p></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
+
+  </main>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toast-icon">✅</span>
+  <span id="toast-msg">Guardado correctamente</span>
 </div>
 
 <script>
+/* ── CONFIG ── */
 const nombresAmigables = {
-    'hero_subtitle': 'Texto Pequeño arriba del Título Principal',
-    'hero_title': 'Título Grande de la Portada',
-    'hero_desc': 'Descripción debajo del Título Principal',
-    'shipping_notice': 'Aviso de Despacho (La barra horizontal con el ícono de bicicleta)',
-    'exp_title': 'Título Grande de la Sección "Experiencia"',
-    'exp_desc1': 'Primer párrafo explicativo sobre tu proceso de tueste',
-    'exp_desc2': 'Segundo párrafo explicativo sobre tu proceso de tueste',
-    'about_p1': 'Primer párrafo de la sección "Nuestra Obsesión / Nosotros"',
-    'about_p2': 'Segundo párrafo de la sección "Nuestra Obsesión / Nosotros"'
+  'hero_subtitle':   'Texto pequeño sobre el título principal',
+  'hero_title':      'Título grande de la portada',
+  'hero_desc':       'Descripción bajo el título',
+  'shipping_notice': 'Aviso de despacho (barra con bicicleta)',
+  'exp_title':       'Título sección "Experiencia"',
+  'exp_desc1':       'Primer párrafo de la sección Experiencia',
+  'exp_desc2':       'Segundo párrafo de la sección Experiencia',
+  'about_p1':        'Primer párrafo — Nuestra Obsesión',
+  'about_p2':        'Segundo párrafo — Nuestra Obsesión'
 };
 
+/* ── STATE ── */
 let jwtToken = localStorage.getItem('adminToken');
 let allProducts = [];
 
+/* ── INIT ── */
 if (jwtToken) {
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('dashboard-screen').style.display = 'block';
-    loadAdminData();
+  showApp();
 }
 
+/* ── AUTH ── */
 async function login() {
-    const rut = document.getElementById('rut').value;
-    const password = document.getElementById('password').value;
-    
-    try {
-        const res = await fetch('/api/auth/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ rut, password })
-        });
-        const data = await res.json();
-        
-        if (data.token) {
-            localStorage.setItem('adminToken', data.token);
-            jwtToken = data.token;
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('dashboard-screen').style.display = 'block';
-            loadAdminData();
-        } else {
-            alert("Los datos ingresados no son correctos. Por favor, intente de nuevo.");
-        }
-    } catch (e) {
-        alert('No se pudo conectar con el sistema. Revise su conexión a internet.');
+  const rut      = document.getElementById('rut').value.trim();
+  const password = document.getElementById('password').value;
+  if (!rut || !password) { toast('Completa todos los campos', 'error'); return; }
+
+  try {
+    const res  = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ rut, password })
+    });
+    const data = await res.json();
+    if (data.token) {
+      localStorage.setItem('adminToken', data.token);
+      jwtToken = data.token;
+      showApp();
+    } else {
+      toast('Credenciales incorrectas', 'error');
     }
+  } catch { toast('Sin conexión al servidor', 'error'); }
 }
 
 function logout() {
-    localStorage.removeItem('adminToken');
-    location.reload();
+  localStorage.removeItem('adminToken');
+  location.reload();
 }
 
-function showSection(sectionId) {
-    document.querySelectorAll('.admin-section').forEach(el => el.classList.remove('active'));
-    document.querySelectorAll('.admin-nav-btn').forEach(el => el.classList.remove('active'));
-    document.getElementById(sectionId + '-section').classList.add('active');
-    event.currentTarget.classList.add('active');
+function showApp() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').classList.add('visible');
+  loadAllData();
 }
 
-async function loadAdminData() {
-    loadTexts();
-    loadProducts();
-    loadSales();
+/* ── SECTIONS ── */
+function showSection(id, btn) {
+  document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+  document.getElementById(id + '-section').classList.add('active');
+  if (btn) btn.classList.add('active');
 }
 
+/* ── LOAD ALL ── */
+async function loadAllData() {
+  loadTexts();
+  loadProducts();
+  loadSales();
+}
+
+/* ══ TEXTS ══ */
 async function loadTexts() {
-    try {
-        const res = await fetch('/api/texts');
-        const texts = await res.json();
-        const container = document.getElementById('text-editor-container');
-        container.innerHTML = '';
-        
-        for (const key in texts) {
-            const etiqueta = nombresAmigables[key] || ("Texto interno: " + key);
-            container.innerHTML += `
-                <div class="admin-form-group">
-                    <label style="font-size: 1.3rem; font-weight: 700; color: #d4a373; display: block; margin-bottom: 15px;">${etiqueta}</label>
-                    <textarea id="text_${key}" class="admin-textarea">${texts[key]}</textarea>
-                </div>
-            `;
-        }
-    } catch(e) {
-        alert("Hubo un problema al cargar los textos.");
+  try {
+    const res   = await fetch('/api/texts');
+    const texts = await res.json();
+    const c     = document.getElementById('text-editor-container');
+    c.innerHTML = '';
+
+    for (const key in texts) {
+      const label = nombresAmigables[key] || key;
+      const block = document.createElement('div');
+      block.className = 'text-block';
+      block.innerHTML = `
+        <div class="text-block-label">${label}</div>
+        <textarea class="txta" id="text_${key}">${texts[key]}</textarea>
+      `;
+      c.appendChild(block);
     }
+  } catch { toast('Error al cargar textos', 'error'); }
 }
 
 async function saveTexts() {
-    const textareas = document.querySelectorAll('.admin-textarea');
-    const updates = {};
-    textareas.forEach(ta => {
-        if(ta.id.startsWith('text_')) {
-            const key = ta.id.replace('text_', '');
-            updates[key] = ta.value;
-        }
-    });
+  const updates = {};
+  document.querySelectorAll('.txta').forEach(ta => {
+    if (ta.id.startsWith('text_')) updates[ta.id.replace('text_', '')] = ta.value;
+  });
 
-    try {
-        const res = await fetch('/api/admin/texts', {
-            method: 'PUT',
-            headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + jwtToken
-            },
-            body: JSON.stringify(updates)
-        });
-        
-        if (res.ok) {
-            alert('¡Excelente! Los textos se guardaron y ya están visibles en tu página principal.');
-        } else {
-            alert('Hubo un error al guardar. Su sesión podría haber caducado.');
-        }
-    } catch(e) {
-        alert('Error de conexión.');
-    }
+  try {
+    const res = await fetch('/api/admin/texts', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + jwtToken },
+      body: JSON.stringify(updates)
+    });
+    if (res.ok) toast('¡Textos guardados correctamente!', 'success');
+    else        toast('Error al guardar. ¿Sesión expirada?', 'error');
+  } catch { toast('Error de conexión', 'error'); }
 }
 
+/* ══ PRODUCTS ══ */
 async function loadProducts() {
-    try {
-        const res = await fetch('/api/products');
-        allProducts = await res.json();
-        const tbody = document.getElementById('products-table-body');
-        tbody.innerHTML = '';
-        
-        if(allProducts.length === 0){
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Aún no has agregado ningún café al catálogo.</td></tr>';
-            return;
-        }
+  try {
+    const res    = await fetch('/api/products');
+    allProducts  = await res.json();
+    renderProductTable();
+    renderProductCards();
+  } catch { console.error('Error al cargar productos'); }
+}
 
-        allProducts.forEach(p => {
-            const stockColor = p.stock <= 3 ? '#d32f2f' : '#2e7d32';
-            tbody.innerHTML += `
-                <tr>
-                    <td><img src="${p.img}" class="prod-img-preview" alt="Foto"></td>
-                    <td style="font-size: 1.3rem;"><strong>${p.name}</strong></td>
-                    <td style="font-size: 1.3rem;">$${p.price.toLocaleString('es-CL')}</td>
-                    <td style="color: ${stockColor}; font-weight: 900; font-size: 1.5rem;">${p.stock}</td>
-                    <td>
-                        <button class="admin-btn-edit" onclick="editProduct(${p.id})">Editar Datos</button>
-                        <button class="admin-btn-danger" onclick="deleteProduct(${p.id})">Borrar Definitivo</button>
-                    </td>
-                </tr>
-            `;
-        });
-    } catch(e) {
-        console.error(e);
-    }
+function stockClass(s) {
+  if (s === 0) return 'stock-out';
+  if (s <= 3)  return 'stock-low';
+  return 'stock-ok';
+}
+
+function renderProductTable() {
+  const tbody = document.getElementById('products-table-body');
+  if (!allProducts.length) {
+    tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state"><div class="emo">☕</div><p>Sin cafés en el catálogo todavía.</p></div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = allProducts.map(p => `
+    <tr>
+      <td><img src="${esc(p.img)}" class="prod-thumb" alt=""></td>
+      <td><div class="prod-name">${esc(p.name)}</div></td>
+      <td><span class="price-tag">$${p.price.toLocaleString('es-CL')}</span></td>
+      <td><span class="stock-tag ${stockClass(p.stock)}">${p.stock}</span></td>
+      <td>
+        <div class="action-cell">
+          <button class="btn btn-edit" onclick="editProduct(${p.id})">Editar</button>
+          <button class="btn btn-danger" onclick="deleteProduct(${p.id})">Borrar</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function renderProductCards() {
+  const c = document.getElementById('prod-cards-container');
+  if (!allProducts.length) {
+    c.innerHTML = '<div class="empty-state"><div class="emo">☕</div><p>Sin cafés en el catálogo todavía.</p></div>';
+    return;
+  }
+  c.innerHTML = allProducts.map(p => `
+    <div class="prod-card">
+      <img src="${esc(p.img)}" class="prod-thumb" alt="">
+      <div class="prod-card-info">
+        <div class="prod-card-name">${esc(p.name)}</div>
+        <div class="prod-card-meta">
+          $${p.price.toLocaleString('es-CL')} &nbsp;·&nbsp;
+          Stock: <span class="${stockClass(p.stock)}">${p.stock}</span>
+        </div>
+        <div class="prod-card-actions">
+          <button class="btn btn-edit" onclick="editProduct(${p.id})">Editar</button>
+          <button class="btn btn-danger" onclick="deleteProduct(${p.id})">Borrar</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
 }
 
 function editProduct(id) {
-    const p = allProducts.find(prod => prod.id === id);
-    if (!p) return;
-    
-    document.getElementById('form-title').innerText = 'Modificando: ' + p.name;
-    document.getElementById('form-title').style.color = '#d4a373';
-    document.getElementById('prod-submit-btn').innerText = 'Guardar Cambios de este Café';
-    
-    document.getElementById('prod-id').value = p.id;
-    document.getElementById('prod-name').value = p.name;
-    document.getElementById('prod-price').value = p.price;
-    document.getElementById('prod-img').value = p.img;
-    document.getElementById('prod-origin').value = p.origin;
-    document.getElementById('prod-roast').value = p.roast;
-    document.getElementById('prod-stock').value = p.stock;
-    document.getElementById('prod-desc').value = p.desc;
-    
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  const p = allProducts.find(x => x.id === id);
+  if (!p) return;
+
+  /* Switch to products tab if not already there */
+  document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+  document.getElementById('products-section').classList.add('active');
+  document.querySelectorAll('.nav-tab')[1].classList.add('active');
+
+  /* Fill form */
+  document.getElementById('prod-id').value      = p.id;
+  document.getElementById('prod-name').value    = p.name;
+  document.getElementById('prod-price').value   = p.price;
+  document.getElementById('prod-img').value     = p.img;
+  document.getElementById('prod-origin').value  = p.origin;
+  document.getElementById('prod-roast').value   = p.roast;
+  document.getElementById('prod-stock').value   = p.stock;
+  document.getElementById('prod-desc').value    = p.desc;
+
+  /* Update UI labels */
+  document.getElementById('form-card-title').textContent = '✏️ Editando: ' + p.name;
+  document.getElementById('prod-submit-btn').textContent  = '💾 Guardar Cambios';
+  const status = document.getElementById('form-status');
+  document.getElementById('form-status-text').textContent = 'Modificando: ' + p.name;
+  status.classList.add('visible');
+
+  /* Scroll to top smoothly */
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function resetProductForm() {
-    document.getElementById('form-title').innerText = 'Agregar un Nuevo Café al Catálogo';
-    document.getElementById('form-title').style.color = '#2b1810';
-    document.getElementById('prod-submit-btn').innerText = 'Guardar este Café';
-    document.getElementById('prod-id').value = '';
-    document.getElementById('prod-name').value = '';
-    document.getElementById('prod-price').value = '';
-    document.getElementById('prod-img').value = '';
-    document.getElementById('prod-origin').value = '';
-    document.getElementById('prod-roast').value = '';
-    document.getElementById('prod-stock').value = '0';
-    document.getElementById('prod-desc').value = '';
+  document.getElementById('prod-id').value     = '';
+  document.getElementById('prod-name').value   = '';
+  document.getElementById('prod-price').value  = '';
+  document.getElementById('prod-img').value    = '';
+  document.getElementById('prod-origin').value = '';
+  document.getElementById('prod-roast').value  = '';
+  document.getElementById('prod-stock').value  = '0';
+  document.getElementById('prod-desc').value   = '';
+
+  document.getElementById('form-card-title').textContent = '☕ Nuevo Café';
+  document.getElementById('prod-submit-btn').textContent  = '💾 Guardar Café';
+  document.getElementById('form-status').classList.remove('visible');
 }
 
 async function saveProduct() {
-    const id = document.getElementById('prod-id').value;
-    const name = document.getElementById('prod-name').value;
-    const price = document.getElementById('prod-price').value;
-    
-    if(!name || !price) {
-        alert("Por favor, asegúrese de escribir al menos el nombre y el precio del café.");
-        return;
+  const id    = document.getElementById('prod-id').value;
+  const name  = document.getElementById('prod-name').value.trim();
+  const price = document.getElementById('prod-price').value;
+
+  if (!name || !price) { toast('Nombre y precio son obligatorios', 'error'); return; }
+
+  const body = {
+    name,
+    price,
+    img:    document.getElementById('prod-img').value    || 'https://via.placeholder.com/500?text=Sin+Imagen',
+    origin: document.getElementById('prod-origin').value || 'Sin especificar',
+    roast:  document.getElementById('prod-roast').value  || 'Medio',
+    stock:  document.getElementById('prod-stock').value  || 0,
+    desc:   document.getElementById('prod-desc').value   || 'Un café de especialidad.'
+  };
+
+  const method = id ? 'PUT' : 'POST';
+  const url    = id ? `/api/admin/products/${id}` : '/api/admin/products';
+
+  try {
+    const res = await fetch(url, {
+      method,
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + jwtToken },
+      body: JSON.stringify(body)
+    });
+
+    if (res.ok) {
+      resetProductForm();
+      loadProducts();
+      toast('¡Café guardado correctamente!', 'success');
+    } else {
+      toast('Error al guardar el producto', 'error');
     }
-
-    const productData = {
-        name: name,
-        price: price,
-        img: document.getElementById('prod-img').value || 'https://via.placeholder.com/500?text=Sin+Imagen',
-        origin: document.getElementById('prod-origin').value || 'Sin especificar',
-        roast: document.getElementById('prod-roast').value || 'Medio',
-        stock: document.getElementById('prod-stock').value || 0,
-        desc: document.getElementById('prod-desc').value || 'Un café de especialidad preparado con dedicación.'
-    };
-
-    const method = id ? 'PUT' : 'POST';
-    const url = id ? `/api/admin/products/${id}` : '/api/admin/products';
-
-    try {
-        const res = await fetch(url, {
-            method: method,
-            headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + jwtToken
-            },
-            body: JSON.stringify(productData)
-        });
-
-        if (res.ok) {
-            resetProductForm();
-            loadProducts();
-            alert('¡El café se guardó correctamente en tu catálogo!');
-        } else {
-            alert('Hubo un problema al guardar el producto.');
-        }
-    } catch(e) {
-        alert('Error de conexión.');
-    }
+  } catch { toast('Error de conexión', 'error'); }
 }
 
 async function deleteProduct(id) {
-    if (!confirm('¿Está seguro que desea eliminar este café para siempre? Si solo se quedó sin stock, es mejor editarlo y poner el stock en 0.')) return;
+  const p = allProducts.find(x => x.id === id);
+  const name = p ? p.name : 'este café';
+  if (!confirm(`¿Eliminar "${name}" definitivamente?\n\nSi solo se agotó el stock, mejor ponlo en 0.`)) return;
 
-    try {
-        const res = await fetch(`/api/admin/products/${id}`, {
-            method: 'DELETE',
-            headers: { 'Authorization': 'Bearer ' + jwtToken }
-        });
-
-        if (res.ok) {
-            loadProducts();
-            alert("El café ha sido eliminado de su página.");
-        } else {
-            alert('No se pudo borrar el producto.');
-        }
-    } catch(e) {
-        alert("Error de conexión.");
-    }
+  try {
+    const res = await fetch(`/api/admin/products/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': 'Bearer ' + jwtToken }
+    });
+    if (res.ok) { loadProducts(); toast('Producto eliminado', 'success'); }
+    else        toast('No se pudo eliminar', 'error');
+  } catch { toast('Error de conexión', 'error'); }
 }
 
+/* ══ SALES ══ */
 async function loadSales() {
-    try {
-        const res = await fetch('/api/admin/orders', {
-            headers: { 'Authorization': 'Bearer ' + jwtToken }
-        });
-        const orders = await res.json();
-        const tbody = document.getElementById('sales-table-body');
-        tbody.innerHTML = '';
-        
-        if(orders.length === 0){
-            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Aún no hay ventas pagadas en los últimos 7 días.</td></tr>';
-            return;
-        }
+  try {
+    const res    = await fetch('/api/admin/orders', { headers: { 'Authorization': 'Bearer ' + jwtToken } });
+    const orders = await res.json();
 
-        orders.forEach(o => {
-            const date = new Date(o.date).toLocaleString('es-CL', { dateStyle: 'full', timeStyle: 'short' });
-            const items = o.items.map(i => `${i.quantity} unidad(es) de ${i.name}`).join(' y ');
-            tbody.innerHTML += `
-                <tr>
-                    <td>${date}</td>
-                    <td style="color: #666;">${o.buyOrder}</td>
-                    <td style="color: #2e7d32; font-weight: bold; font-size: 1.3rem;">$${o.amount.toLocaleString('es-CL')}</td>
-                    <td style="font-size: 1.1rem; color: #333;">${items}</td>
-                </tr>
-            `;
-        });
-    } catch(e) {
-        console.error(e);
+    /* Stats */
+    const total = orders.reduce((s, o) => s + o.amount, 0);
+    const avg   = orders.length ? Math.round(total / orders.length) : 0;
+    document.getElementById('stat-total').textContent = '$' + total.toLocaleString('es-CL');
+    document.getElementById('stat-count').textContent = orders.length;
+    document.getElementById('stat-avg').textContent   = '$' + avg.toLocaleString('es-CL');
+
+    const tbody = document.getElementById('sales-table-body');
+    if (!orders.length) {
+      tbody.innerHTML = '<tr><td colspan="4"><div class="empty-state"><div class="emo">📊</div><p>Sin ventas en los últimos 7 días.</p></div></td></tr>';
+      return;
     }
+
+    tbody.innerHTML = orders.map(o => {
+      const date  = new Date(o.date).toLocaleString('es-CL', { dateStyle: 'medium', timeStyle: 'short' });
+      const items = o.items.map(i => `${i.quantity}× ${i.name}`).join(', ');
+      return `
+        <tr>
+          <td><div class="order-date">${date}</div></td>
+          <td><div class="order-id">${esc(o.buyOrder)}</div></td>
+          <td><div class="order-amount">$${o.amount.toLocaleString('es-CL')}</div></td>
+          <td><div class="order-items">${esc(items)}</div></td>
+        </tr>
+      `;
+    }).join('');
+  } catch { console.error('Error al cargar ventas'); }
+}
+
+/* ── TOAST ── */
+let toastTimer;
+function toast(msg, type = 'success') {
+  const el   = document.getElementById('toast');
+  const icon = document.getElementById('toast-icon');
+  const txt  = document.getElementById('toast-msg');
+  icon.textContent = type === 'success' ? '✅' : '❌';
+  txt.textContent  = msg;
+  el.className = 'toast ' + type;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 3200);
+}
+
+/* ── UTILS ── */
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 </script>
-
 </body>
 </html>
