@@ -7,44 +7,57 @@
 <link rel="stylesheet" href="styles.css">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Poppins:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-.top-brand-banner {
-    background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
-    color: #D4AF37;
-    text-align: center;
-    padding: 12px 20px;
-    font-family: 'Playfair Display', serif;
-    font-size: 1.2rem;
-    font-weight: 700;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    position: relative;
-    z-index: 10000;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.6);
-    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
-    animation: glowBanner 2s infinite alternate;
+.brand-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
 
-@keyframes glowBanner {
+.navbar-brand-text {
+    color: #D4AF37;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-shadow: 0 0 5px rgba(212, 175, 55, 0.4);
+    animation: glowText 2s infinite alternate;
+}
+
+@keyframes glowText {
     from {
         text-shadow: 0 0 5px rgba(212, 175, 55, 0.4);
     }
     to {
-        text-shadow: 0 0 15px rgba(212, 175, 55, 0.8), 0 0 20px rgba(212, 175, 55, 0.5);
+        text-shadow: 0 0 10px rgba(212, 175, 55, 0.8), 0 0 15px rgba(212, 175, 55, 0.5);
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar-brand-text {
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+        line-height: 1.2;
+        max-width: 150px;
+    }
+    .brand-wrapper {
+        gap: 8px;
     }
 }
 </style>
 </head>
 <body>
 
-<div class="top-brand-banner">Laulhére, Café de Especialidad</div>
-
 <div id="progress-container">
   <div id="progress-bar"></div>
 </div>
 
 <header class="navbar" id="navbar">
-  <div class="logo-container magnetic" data-strength="20">
-    <img src="image_aa7f07.png" alt="Café Laulhère Logo" class="logo-img">
+  <div class="brand-wrapper">
+    <div class="logo-container magnetic" data-strength="20">
+      <img src="image_aa7f07.png" alt="Café Laulhère Logo" class="logo-img">
+    </div>
+    <div class="navbar-brand-text">Laulhére, Café de Especialidad</div>
   </div>
   <nav>
     <ul class="nav-links">
